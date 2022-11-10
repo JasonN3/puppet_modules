@@ -14,6 +14,8 @@ jobs:
   puppet-lint:
     name: Run pdk validate
     runs-on: ubuntu-latest
+    container:
+      image: puppet/pdk:latest
     permissions:
       contents: read # for checkout to fetch code
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
@@ -23,8 +25,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Ruby
-        uses: docker://puppet/pdk:latest
+      - name: Validate code
         run: |
           curr_loc=$(pwd)
           ERC=0
