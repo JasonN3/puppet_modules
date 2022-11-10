@@ -29,7 +29,7 @@ jobs:
         run: |
           curr_loc=$(pwd)
           ERC=0
-          for module in $(ls)
+          for module in $(ls -d */)
           do
             cd ${curr_loc}/${module}
             puppet validate
