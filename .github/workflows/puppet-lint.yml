@@ -6,6 +6,7 @@ on:
     - main
     types:
     - ready_for_review
+    - review_requested
 
 permissions:
   contents: read
