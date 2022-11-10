@@ -1,0 +1,48 @@
+name: readme-updated
+
+on:
+  pull_request:
+    branches:
+    - main
+    types:
+    - ready_for_review
+    - edited
+
+permissions:
+  contents: read
+
+jobs:
+  puppet-lint:
+    if: github.event.pull_request.draft == false
+    name: Verify README.md is up to date
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # for checkout to fetch code
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate README
+        run: |
+          curr_loc=$(pwd)
+          ERC=0
+          for module in $(ls -d */) .
+          do
+            mv ${module}/README.md ${module}/README.md.orig
+          done
+          ./gen_readme.sh
+          for module in $(ls -d */) .
+          do
+            diff ${module}/README.md{,.orig}
+            RC=$?
+            if [[ $RC != 0 ]]
+            then
+              ERC=$RC
+            fi
+          done
+          if [[ $ERC != 0 ]]
+          then
+            echo "Run gen_readme.sh to generate the README files"
+          fi
+          exit $ERC
