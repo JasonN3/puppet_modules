@@ -34,7 +34,7 @@ jobs:
           for module in $(ls -d */)
           do
             cd ${curr_loc}/${module}
-            puppet validate
+            pdk validate
             RC=$?
             if [[ $RC -ne 0 ]]
             then

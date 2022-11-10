@@ -29,7 +29,6 @@ do
     echo "## ${module} Class" >> ${readme_file}
     while read -r line
     do
-      echo $line
       if [[ $line == "#" ]]
       then
         break
