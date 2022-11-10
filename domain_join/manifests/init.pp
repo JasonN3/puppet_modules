@@ -35,11 +35,11 @@ class domainjoin (
 ) {
   if $override_domain {
     $currdomain = $override_domain
-    # This is only used if $override_domain != ''
+    # This is only used if $override_domain is defined
     $forced_fqdn = sprintf('%s.%s', $facts['networking']['hostname'], $currdomain)
   } else {
     if $dns_subdomain {
-      $currdomain = regsubst($facts['networking']['domain'], "${dns_subdomain}\.", '')
+      $currdomain = regsubst($facts['networking']['domain'], "${dns_subdomain}\\.", '')
     } else {
       $currdomain = $facts['networking']['domain']
     }
@@ -93,6 +93,7 @@ class domainjoin (
   }
 
   if($override_domain != '') {
+    # lint:ignore:strict_indent
     $command = Sensitive(@("EOT"/)
       bash -c '
         source /etc/os-release; 
@@ -108,7 +109,9 @@ class domainjoin (
         '
       EOT
     )
+    # lint:endignore
   } else {
+    # lint:ignore:strict_indent
     $command = Sensitive(@("EOT"/)
       bash -c '
         source /etc/os-release; 
@@ -123,6 +126,7 @@ class domainjoin (
         '
       EOT
     )
+    # lint:endignore
   }
 
   exec { 'Join':
