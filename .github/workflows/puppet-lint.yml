@@ -6,7 +6,7 @@ on:
     - main
     types:
     - ready_for_review
-    - edited
+  push:
 
 permissions:
   contents: read
