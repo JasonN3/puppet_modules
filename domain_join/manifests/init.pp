@@ -139,7 +139,6 @@ class domain_join (
       Package['samba-common-tools'],
       Package['sssd'],
       File['/etc/krb5.conf'],
-      File['/etc/samba/smb.conf'],
       File['/etc/sssd/sssd.conf'],
     ],
   }
@@ -149,13 +148,6 @@ class domain_join (
     content => template('domain_join/krb5.conf.erb'),
     notify  => Service['sssd'],
     require => Package['krb5-workstation'],
-  }
-
-  file { '/etc/samba/smb.conf':
-    ensure  => file,
-    content => template('domain_join/smb.conf.erb'),
-    notify  => Service['sssd'],
-    require => Package['samba-common'],
   }
 
   file { '/etc/sssd/sssd.conf':
