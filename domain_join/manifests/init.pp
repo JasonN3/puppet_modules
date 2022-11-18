@@ -13,7 +13,7 @@
 # @param domain_short       The NetBIOS name for the domain
 # @param dns_subdomain      The subdomain that the dns records should be registered to. Example: for machine1.sd.example.com, sd would be the subdomain
 # @param dnsupdate          If SSSD should create the dns record for the machine. Secure updates are supported
-# @param file_header        A commented header to put on each of the managed files. A global file header can be defined using the top-level variable global_file_header
+# @param file_header        A commented header to put on each of the managed files. A global file header can be defined using the top-level variable file_header
 # @param time_servers       A list of time servers. The domain will automatically be added to the end of the list
 # @param configure_chrony   Configures Chrony using time servers in time_servers. Time synchronization is required for kerberos to function
 # lint:endignore
@@ -48,8 +48,8 @@ class domain_join (
   # lint:ignore:top_scope_facts
   if $file_header {
     $file_header_local = $file_header
-  } elsif $::global_file_header {
-    $file_header_local = $::global_file_header
+  } elsif $::file_header {
+    $file_header_local = $::file_header
   } else {
     $file_header_local = 'This file is being maintained by Puppet. Do not edit.'
   }
