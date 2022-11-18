@@ -105,45 +105,18 @@ class domain_join (
   }
 
   if($override_domain) {
-    # lint:ignore:strict_indent
-    $command = Sensitive(@("EOT"/)
-      bash -c '
-        source /etc/os-release; 
-        echo -n \"${$sensitive_password.unwrap}\" | 
-          adcli join 
-            -H ${forced_fqdn} 
-            -D ${currdomain} 
-            -U \"${username}\" 
-            --stdin-password 
-            --os-name=\"\${NAME}\" 
-            --os-version=\"\${VERSION}\" 
-            --os-service-pack=\"\${VERSION_ID}\"
-        '
-      EOT
-    )
+    # lint:ignore:140chars
+    $command = Sensitive("bash -c 'source /etc/os-release; echo -n \"${$sensitive_password.unwrap}\" | adcli join -H ${forced_fqdn} -D ${currdomain} -U \"${username}\" --stdin-password --os-name=\"\${NAME}\" --os-version=\"\${VERSION}\" --os-service-pack=\"\${VERSION_ID}\"'")
     # lint:endignore
   } else {
-    # lint:ignore:strict_indent
-    $command = Sensitive(@("EOT"/)
-      bash -c '
-        source /etc/os-release; 
-        echo -n \"${$sensitive_password.unwrap}\" | 
-          adcli join 
-            -D ${currdomain} 
-            -U \"${username}\" 
-            --stdin-password 
-            --os-name=\"\${NAME}\" 
-            --os-version=\"\${VERSION}\" 
-            --os-service-pack=\"\${VERSION_ID}\"
-        '
-      EOT
-    )
+    # lint:ignore:140chars
+    $command = Sensitive("bash -c 'source /etc/os-release; echo -n \"${$sensitive_password.unwrap}\" | adcli join -D ${currdomain} -U \"${username}\" --stdin-password --os-name=\"\${NAME}\" --os-version=\"\${VERSION}\" --os-service-pack=\"\${VERSION_ID}\"'")
     # lint:endignore
   }
 
   exec { 'Join':
     command => $command,
-    path    => '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin',
+    path    => $facts['path'],
     notify  => Service['sssd'],
     creates => '/etc/krb5.keytab',
     require => [
