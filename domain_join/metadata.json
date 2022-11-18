@@ -1,10 +1,10 @@
 {
-    "name": "JasonN3-domainjoin",
+    "name": "JasonN3-domain_join",
     "version": "0.1.0",
     "author": "Jason Nagin",
     "summary": "This module will install and configure the required packages to join an Active Directory domain.",
     "license": "Apache-2.0",
-    "source": "https://github.com/JasonN3/puppet_modules/domainjoin",
+    "source": "https://github.com/JasonN3/puppet_modules/tree/main/domain_join",
     "dependencies": [
       {
         "name": "puppet-chrony",

@@ -16,7 +16,7 @@
 # @param file_header        A commented header to put on each of the managed files
 # @param time_servers       A list of time servers. The domain will automatically be added to the end of the list
 # lint:endignore
-class domainjoin (
+class domain_join (
   String            $username,
   Sensitive[String] $sensitive_password,
   String            $global_admins,
