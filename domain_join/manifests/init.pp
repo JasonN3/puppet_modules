@@ -45,13 +45,15 @@ class domain_join (
     }
   }
 
+  # lint:ignore:top_scope_facts
   if $file_header {
     $file_header_local = $file_header
-  } elsif $facts['file_header'] {
-    $file_header_local = $facts['file_header']
+  } elsif $::file_header {
+    $file_header_local = $::file_header
   } else {
     $file_header_local = 'This file is being maintained by Puppet. Do not edit.'
   }
+  # lint:endignore
 
   if $domain_short {
     $shortdomain = split($currdomain, '[.]')[0]
