@@ -24,11 +24,11 @@ class domainjoin (
   String            $local_admins,
   String            $local_ssh,
   String            $sssd_home = '/home',
-  String            $override_domain = undef,
-  String            $domain_short = undef,
-  String            $dns_subdomain = undef,
+  Optional[String]  $override_domain,
+  Optional[String]  $domain_short,
+  Optional[String]  $dns_subdomain,
   Boolean           $dnsupdate = true,
-  String            $file_header = undef,
+  Optional[String]  $file_header,
   Array             $time_servers = []
 ) {
   if $override_domain {
