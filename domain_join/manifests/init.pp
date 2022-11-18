@@ -104,7 +104,7 @@ class domain_join (
     ensure => installed,
   }
 
-  if($override_domain != '') {
+  if($override_domain) {
     # lint:ignore:strict_indent
     $command = Sensitive(@("EOT"/)
       bash -c '
