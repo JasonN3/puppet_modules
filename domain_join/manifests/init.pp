@@ -15,6 +15,7 @@
 # @param dnsupdate          If SSSD should create the dns record for the machine. Secure updates are supported
 # @param file_header        A commented header to put on each of the managed files
 # @param time_servers       A list of time servers. The domain will automatically be added to the end of the list
+# @param configure_chrony   Configures Chrony using time servers in time_servers. Time synchronization is required for kerberos to function
 # lint:endignore
 class domain_join (
   String            $username,
@@ -29,7 +30,8 @@ class domain_join (
   Optional[String]  $dns_subdomain = undef,
   Boolean           $dnsupdate = true,
   Optional[String]  $file_header = undef,
-  Array             $time_servers = []
+  Array             $time_servers = [],
+  Boolean           $configure_chrony = true
 ) {
   if $override_domain {
     $currdomain = $override_domain
@@ -49,8 +51,10 @@ class domain_join (
     $shortdomain = $domain_short
   }
 
-  class { 'chrony':
-    servers => $time_servers + [$currdomain],
+  if $configure_chrony {
+    class { 'chrony':
+      servers => $time_servers + [$currdomain],
+    }
   }
 
   package { 'adcli':
