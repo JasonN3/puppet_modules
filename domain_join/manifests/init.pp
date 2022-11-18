@@ -45,6 +45,14 @@ class domain_join (
     }
   }
 
+  if $file_header {
+    $file_header_local = $file_header
+  } elsif $facts['file_header'] {
+    $file_header_local = $facts['file_header']
+  } else {
+    $file_header_local = 'This file is being maintained by Puppet. Do not edit.'
+  }
+
   if $domain_short {
     $shortdomain = split($currdomain, '[.]')[0]
   } else {
