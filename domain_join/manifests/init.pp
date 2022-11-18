@@ -146,21 +146,21 @@ class domain_join (
 
   file { '/etc/krb5.conf':
     ensure  => file,
-    content => template('domainjoin/krb5.conf.erb'),
+    content => template('domain_join/krb5.conf.erb'),
     notify  => Service['sssd'],
     require => Package['krb5-workstation'],
   }
 
   file { '/etc/samba/smb.conf':
     ensure  => file,
-    content => template('domainjoin/smb.conf.erb'),
+    content => template('domain_join/smb.conf.erb'),
     notify  => Service['sssd'],
     require => Package['samba-common'],
   }
 
   file { '/etc/sssd/sssd.conf':
     ensure  => file,
-    content => template('domainjoin/sssd.conf.erb'),
+    content => template('domain_join/sssd.conf.erb'),
     owner   => root,
     group   => root,
     mode    => '0400',
@@ -183,7 +183,7 @@ class domain_join (
 
   file { '/etc/sudoers.d/admins':
     ensure  => file,
-    content => template('domainjoin/sudoers.erb'),
+    content => template('domain_join/sudoers.erb'),
   }
 
   case $facts['os']['family'] {
