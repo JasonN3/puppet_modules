@@ -9,7 +9,7 @@ id_provider = ad
 <% unless @dnsupdate -%>
 dyndns_update = false
 <% end -%>
-<% if @override_domain != "" -%>
+<% if @override_domain -%>
 ad_hostname = <%= @forced_fqdn %>
 <% end -%>
 dyndns_force_tcp = true
