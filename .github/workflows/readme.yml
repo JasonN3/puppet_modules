@@ -1,4 +1,4 @@
-name: puppet-lint
+name: readme-updated
 
 on:
   pull_request:
@@ -14,31 +14,35 @@ permissions:
 jobs:
   puppet-lint:
     if: github.event.pull_request.draft == false
-    name: Run pdk validate
+    name: Verify README.md is up to date
     runs-on: ubuntu-latest
-    container:
-      image: puppet/pdk:latest
     permissions:
       contents: read # for checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate code
+      - name: Validate README
         run: |
           curr_loc=$(pwd)
           ERC=0
-          for module in $(ls -d */)
+          for module in $(ls -d */) .
           do
-            cd ${curr_loc}/${module}
-            pdk validate
+            mv ${module}/README.md ${module}/README.md.orig
+          done
+          ./gen_readme.sh
+          for module in $(ls -d */) .
+          do
+            diff ${module}/README.md{,.orig}
             RC=$?
-            if [[ $RC -ne 0 ]]
+            if [[ $RC != 0 ]]
             then
               ERC=$RC
             fi
           done
+          if [[ $ERC != 0 ]]
+          then
+            echo "Run gen_readme.sh to generate the README files"
+          fi
           exit $ERC
