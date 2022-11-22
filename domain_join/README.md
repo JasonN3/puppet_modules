@@ -19,5 +19,6 @@ This module will install and configure the required packages to join an Active D
 |domain_short|      The NetBIOS name for the domain|
 |dns_subdomain|     The subdomain that the dns records should be registered to. Example: for machine1.sd.example.com, sd would be the subdomain|
 |dnsupdate|         If SSSD should create the dns record for the machine. Secure updates are supported|
-|file_header|       A commented header to put on each of the managed files|
+|file_header|       A commented header to put on each of the managed files. A global file header can be defined using the top-level variable file_header|
 |time_servers|      A list of time servers. The domain will automatically be added to the end of the list|
+|configure_chrony|  Configures Chrony using time servers in time_servers. Time synchronization is required for kerberos to function|
