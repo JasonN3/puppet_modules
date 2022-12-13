@@ -62,7 +62,7 @@ class hashicorp_vault::ssh_server (
       |-CMD
     # lint:endignore
     environment => [
-      sprintf('VAULT_ADDR=%s', $vault::binary::vault_server),
+      sprintf('VAULT_ADDR=%s', $vault_server),
       sprintf('VAULT_CLIENT_CERT=/etc/puppetlabs/puppet/ssl/certs/%s.pem', $trusted['certname']),
       sprintf('VAULT_CLIENT_KEY=/etc/puppetlabs/puppet/ssl/private_keys/%s.pem', $trusted['certname']),
     ],
