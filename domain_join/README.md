@@ -2,7 +2,7 @@
 
 
 This module will install and configure the required packages to join an Active Directory domain.
-## domain_join Class
+## Class domain_join
  This class will domain join a system to Active Directory  
  The machine's hostname should be set to the FQDN  
 ### Parameters
@@ -22,3 +22,6 @@ This module will install and configure the required packages to join an Active D
 |file_header|       A commented header to put on each of the managed files. A global file header can be defined using the top-level variable file_header|
 |time_servers|      A list of time servers. The domain will automatically be added to the end of the list|
 |configure_chrony|  Configures Chrony using time servers in time_servers. Time synchronization is required for kerberos to function|
+
+---
+

@@ -5,6 +5,25 @@
 ## followed by the module name you updated
 ## Example: `./gen_readme.sh domain_join`
 
+function gen_class_info() {
+  while read -r line
+  do
+    if [[ $line == "#" ]]
+    then
+      break
+    fi
+    echo $line | sed 's/^#//' | sed 's/$/  /' >> ${readme_file}
+  done < ${module}/manifests/${class}.pp
+
+  echo "### Parameters" >> ${readme_file}
+  echo "|Name|Description|" >> ${readme_file}
+  echo "|---|---|" >> ${readme_file}
+  cat ${module}/manifests/${class}.pp | grep '^# @param' | cut -d' ' -f3- | sed 's/ /|/' | awk '{print "|" $0 "|" }' >> ${readme_file}
+  echo >> ${readme_file}
+  echo "---" >> ${readme_file}
+  echo >> ${readme_file}
+}
+
 if [[ $1 != "" ]]
 then
   modules=$1
@@ -26,42 +45,34 @@ do
   if [[ -f ${module}/manifests/init.pp ]]
   then
     class="init"
-    echo "## ${module} Class" >> ${readme_file}
-    while read -r line
-    do
-      if [[ $line == "#" ]]
-      then
-        break
-      fi
-      echo $line | sed 's/^#//' | sed 's/$/  /' >> ${readme_file}
-    done < ${module}/manifests/${class}.pp
-
-    echo "### Parameters" >> ${readme_file}
-    echo "|Name|Description|" >> ${readme_file}
-    echo "|---|---|" >> ${readme_file}
-    cat ${module}/manifests/${class}.pp | grep '^# @param' | cut -d' ' -f3- | sed 's/ /|/' | awk '{print "|" $0 "|" }' >> ${readme_file}
+    echo "## Class ${module}" >> ${readme_file}
+    gen_class_info
   fi
 
   for class in $(ls ${module}/manifests)
   do
-    if [[ $class == "init.pp" ]]
+    if [[ $class == "init.pp" || $class = lib_* ]]
     then
       continue
     fi
 
     class=${class/.pp/}
 
-    echo "## ${module}::${class} Parameters" >> ${readme_file}
-    echo "|Name|Description|" >> ${readme_file}
-    echo "|---|---|" >> ${readme_file}
-    cat ${module}/manifests/${class}.pp | grep '^# @param' | cut -d' ' -f3- | sed 's/ /|/' | awk '{print "|" $0 "|" }' >> ${readme_file}
+    echo "## Class ${module}::${class}" >> ${readme_file}
+    gen_class_info
   done
 done
 
 if [[ $1 == "" ]]
 then
   readme_file="README.md"
-  echo "# Puppet Modules" > ${readme_file}
+  echo -n > ${readme_file}
+  if [[ -f .readme/header.md ]]
+  then
+    cat .readme/header.md >> ${readme_file}
+    echo '---' >> ${readme_file}
+  fi
+  echo "## Modules list" >> ${readme_file}
   for module in $(ls -d */)
   do
     module=$(echo $module | tr -d '/')
@@ -69,4 +80,9 @@ then
     cat ${module}/description >> ${readme_file}
     echo >> ${readme_file}
   done
+  if [[ -f .readme/footer.md ]]
+  then
+    echo '---' >> ${readme_file}
+    cat .readme/footer.md >> ${readme_file}
+  fi
 fi
