@@ -1,0 +1,42 @@
+#!/bin/bash
+
+vault_ssh() {
+    if [[ ! -f $HOME/.ssh/id_rsa.pub ]]
+    then
+        ssh-keygen -N '' -f ~/.ssh/id_rsa
+    fi
+    if [[ -z $VAULT_ADDR ]]
+    then
+        export VAULT_ADDR="<%= @vault_server %>"
+    fi
+    if ! (vault token lookup &> /dev/null)
+    then
+        unset VAULT_TOKEN
+        if [[ -n $TMUX ]]
+        then
+            tmux_val=$(tmux showenv VAULT_TOKEN 2> /dev/null)
+            if [[ -n $tmux_val ]] && [[ $tmux_val != "VAULT_TOKEN=$VAULT_TOKEN" ]]
+            then
+                export $tmux_val
+                if ! (vault token lookup &> /dev/null)
+                then
+                    unset VAULT_TOKEN
+                fi
+            fi
+        fi
+        if [[ -z $VAULT_TOKEN ]]
+        then
+            <% if @auth_method == 'ldap' %>
+            export VAULT_TOKEN=$(vault login -token-only -method=ldap username=${USER})
+            <% else %>
+            export VAULT_TOKEN=$(vault login -token-only)
+            <% end %>
+            if [[ -n $TMUX ]]
+            then
+                tmux setenv VAULT_TOKEN ${VAULT_TOKEN}
+            fi
+        fi
+    fi
+    vault token renew > /dev/null
+    vault ssh -mode=ca -role=users $@
+}

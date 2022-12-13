@@ -161,8 +161,9 @@ class domain_join (
   }
 
   file { '/etc/sudoers.d/admins':
-    ensure  => file,
-    content => template('domain_join/sudoers.erb'),
+    ensure       => file,
+    content      => template('domain_join/sudoers.erb'),
+    validate_cmd => '/usr/sbin/visudo -c -f %',
   }
 
   case $facts['os']['family'] {
