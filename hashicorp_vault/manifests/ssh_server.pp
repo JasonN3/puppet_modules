@@ -4,7 +4,7 @@
 # lint:ignore:140chars
 # @param vault_server       The url for the Hashicorp Vault server
 # @param vault_public_key   The public key from the SSH engine that will be trusted. vault_ssh_engine is not needed if this is defined
-# @param vault_ssh_engine   The engine name within the Hashicorp Vault server for the ssh CA so the key can be downloaded from the server. vault_public_key is not needed if this is defined
+# @param vault_ssh_engine   The engine name within the Hashicorp Vault server for the ssh CA so the key can be downloaded from the server. vault_public_key is not needed if this is defined.<br />NOTICE: Because Hashicorp Vault dynamically generates the page, Puppet will always see the file as changed and will re-write the CA file.
 # lint:endignore
 class hashicorp_vault::ssh_server (
   String $vault_server,
