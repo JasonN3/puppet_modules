@@ -10,7 +10,7 @@ class hashicorp_vault::ssh_client (
   require hashicorp_vault::lib_binary
 
   file { '/etc/profile.d/vault_ssh.sh':
-    content => template('vault/vault_ssh.sh.erb'),
+    content => template('hashicorp_vault/vault_ssh.sh.erb'),
     owner   => root,
     group   => root,
     mode    => '0444',

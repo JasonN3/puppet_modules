@@ -17,18 +17,22 @@ class hashicorp_vault::lib_binary {
     }
     'Debian': {
       file { '/etc/apt/sources.list.d/hashicorp.list':
-        content => "deb https://apt.releases.hashicorp.com ${$facts['os']['distro']['codename']} main",
+        content => "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com ${$facts['os']['distro']['codename']} main",
         owner   => root,
         group   => root,
         mode    => '0444',
+        require => Exec['Download GPG key'],
       }
 
-      file { '/etc/apt/trusted.gpg.d/hashicorp.gpg':
-        content => file('vault/hashicorp.gpg'),
-        owner   => root,
-        group   => root,
-        mode    => '0444',
-        before  => File['/etc/apt/sources.list.d/hashicorp.list'],
+      package { 'gpg':
+        ensure => installed,
+      }
+
+      exec { 'Download GPG key':
+        command => 'curl https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg',
+        path    => $facts['path'],
+        creates => '/usr/share/keyrings/hashicorp-archive-keyring.gpg',
+        require => Package['gpg'],
       }
 
       package { 'vault':
